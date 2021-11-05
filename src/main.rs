@@ -1,3 +1,7 @@
+use server::Server;
+
 fn main() {
-    println!("Hello, world!");
+    let server = Server::new();
+
+    server.run();
 }
