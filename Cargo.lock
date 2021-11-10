@@ -21,6 +21,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a60553f9a9e039a333b4e9b20573b9e9b9c0bb3a11e201ccc48ef4283456d673"
 
 [[package]]
+name = "logger"
+version = "0.1.0"
+
+[[package]]
 name = "net2"
 version = "0.2.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -44,6 +48,7 @@ name = "server"
 version = "0.1.0"
 dependencies = [
  "database",
+ "logger",
  "net2",
 ]
 
