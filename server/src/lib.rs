@@ -1,4 +1,5 @@
 use std::error::Error;
+use std::io::BufReader;
 use std::net::{
     TcpListener,
     TcpStream,
@@ -41,14 +42,15 @@ impl Server {
         tcp.reuse_address(true)?;
         let listener = tcp.bind("127.0.0.1:8080")?.listen(511)?;
 
-        let mut database2 = self.database;
+        let database2 = self.database;
         let join = std::thread::spawn(move || {
             logger::info("begin to handle incoming stream");
             for stream in listener.incoming() {
+                let mut stream = stream.unwrap();
                 logger::info("receive stream, begin to handle");
-                let command = parse_command(stream);    // todo
+                let command = parse_command(&mut stream);    // todo
                 let data_result = database2.handle_command(command);   // todo
-                send_response(data_result);// todo
+                handle_response(stream, data_result); // todo
             }
         });
         join.join();
@@ -58,12 +60,13 @@ impl Server {
 }
 
 /// 将缓存命中结果，转换为二进制流
-fn send_response(p0: database::DataResult) {
+fn handle_response(stream: TcpStream, p0: database::DataResult) {
     todo!()
 }
 
 /// 将输入流转换为command 实例
-fn parse_command(stream: std::io::Result<TcpStream>) -> database::Command {
+fn parse_command(stream: &mut TcpStream) -> database::Command {
+    // let mut stream = BufReader::new(stream);
     todo!()
 }
 
