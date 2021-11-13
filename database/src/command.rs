@@ -1,3 +1,7 @@
+use crate::{Database, DataResult};
+use crate::dataresult;
+use crate::Op::Get;
+
 /// 命令相关
 
 /// 命令
@@ -8,10 +12,70 @@ pub struct Command {
     pub args: Vec<String>,
 }
 
+impl Command {}
+
 /// op 枚举值
 pub enum Op {
     /// get操作
     Get,
     /// set操作
     Set,
+}
+
+impl Op {
+    pub(crate) fn handle(&self, database: &mut Database, args: Vec<String>) -> DataResult {
+        match self {
+            Get => {
+                return self.handle_get(database, args);
+            }
+            Set => {
+                return self.handle_set(database, args);
+            }
+        }
+    }
+
+
+    fn handle_get(&self, database: &mut Database, args: Vec<String>) -> DataResult {
+        if args.len() != 1 {
+            logger::error("args is not right, expect len size 1");
+            return DataResult {
+                code: dataresult::Err_Code_Args_Validate,
+                message: "args not right".to_string(),
+                data: "".to_string(),
+            };
+        }
+
+        let result: String = "".to_string();
+        let key = args.get(0).unwrap();
+        let result = match database.get(key.clone()) {
+            Some(val) => val,
+            None => "".to_string(),
+        };
+        DataResult {
+            code: 0,
+            message: "success".to_string(),
+            data: result,
+        }
+    }
+
+    fn handle_set(&self, database: &mut Database, args: Vec<String>) -> DataResult {
+        if args.len() != 2 {
+            logger::error("args is not right, expect len size 2");
+            return DataResult {
+                code: dataresult::Err_Code_Args_Validate,
+                message: "args not right".to_string(),
+                data: "".to_string(),
+            };
+        }
+
+        let key = args.get(0).unwrap();
+        let val = args.get(1).unwrap();
+        database.set(key.clone(), val.clone());
+
+        DataResult {
+            code: 0,
+            message: "success".to_string(),
+            data: "".to_string(),
+        }
+    }
 }

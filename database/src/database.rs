@@ -8,6 +8,12 @@ pub struct Database {
     mapping: HashMap<String, String>,
 }
 
+impl Clone for Database {
+    fn clone(&self) -> Self {
+        todo!()
+    }
+}
+
 impl Database {
     pub fn new() -> Database {
         Database {
@@ -15,7 +21,19 @@ impl Database {
         }
     }
 
-    pub fn handle_command(&self, command: command::Command) -> DataResult {
-        todo!()
+    pub fn handle_command(&mut self, command: command::Command) -> DataResult {
+        command.op.handle(self,command.args)
+    }
+
+    pub(crate) fn get(&self, key: String) -> Option<String> {
+        let result = self.mapping.get(&key);
+        match result {
+            None => None,
+            Some(T) => Some(T.clone()),
+        }
+    }
+
+    pub(crate) fn set(&mut self, key: String, value: String) {
+        self.mapping.insert(key, value);
     }
 }

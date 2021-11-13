@@ -5,4 +5,3 @@ pub use dataresult::*;
 pub mod command;
 pub mod database;
 pub mod dataresult;
-

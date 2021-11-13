@@ -1,5 +1,5 @@
 use std::error::Error;
-use std::io::BufReader;
+use std::io::{BufReader, Read};
 use std::net::{
     TcpListener,
     TcpStream,
@@ -42,7 +42,7 @@ impl Server {
         tcp.reuse_address(true)?;
         let listener = tcp.bind("127.0.0.1:8080")?.listen(511)?;
 
-        let database2 = self.database;
+        let mut database2 = self.database.clone();
         let join = std::thread::spawn(move || {
             logger::info("begin to handle incoming stream");
             for stream in listener.incoming() {
@@ -60,7 +60,7 @@ impl Server {
 }
 
 /// 将缓存命中结果，转换为二进制流
-fn handle_response(stream: TcpStream, p0: database::DataResult) {
+fn handle_response(stream: TcpStream, result: database::DataResult) {
     todo!()
 }
 
@@ -68,13 +68,4 @@ fn handle_response(stream: TcpStream, p0: database::DataResult) {
 fn parse_command(stream: &mut TcpStream) -> database::Command {
     // let mut stream = BufReader::new(stream);
     todo!()
-}
-
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
 }
