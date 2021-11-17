@@ -66,6 +66,44 @@ fn handle_response(stream: TcpStream, result: database::DataResult) {
 
 /// 将输入流转换为command 实例
 fn parse_command(stream: &mut TcpStream) -> database::Command {
+    let content = receive_content(stream);
+    println!("receive content:{}", content);
     // let mut stream = BufReader::new(stream);
     todo!()
+}
+
+// 获取接收的stream内容
+fn receive_content(stream: &mut TcpStream) -> String {
+    let mut data: Vec<u8> = vec![];
+    data.extend(std::iter::repeat(0).take(16));
+    let mut written = 0;
+    loop {
+        let len = {
+            let pos = written;
+
+            // read socket
+            match stream.read(&mut data[pos..]) {
+                Ok(r) => r,
+                Err(err) => {
+                    logger::warn("reading from client fail");
+                    break;
+                }
+            }
+        };
+        written = written + len;
+
+        // client closed connection
+        if len == 0 {
+            logger::info("client close connection");
+            break;
+        }
+
+        let add = written * 2;
+
+        if add > 0 {
+            data.extend(std::iter::repeat(0).take(add));
+        }
+    }
+
+    return String::from_utf8(data).unwrap();
 }
