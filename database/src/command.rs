@@ -12,6 +12,34 @@ pub struct Command {
     pub args: Vec<String>,
 }
 
+impl Command {
+    /// 将文本协议转换为命令对象
+    /// 参考文档：http://redisdoc.com/topic/protocol.html
+    /// 协议的一般模式为
+    /// ```txt
+    ///*<参数数量> CR LF
+    /// $<参数 1 的字节数量> CR LF
+    /// <参数 1 的数据> CR LF
+    /// ...
+    /// $<参数 N 的字节数量> CR LF
+    /// <参数 N 的数据> CR LF
+    /// ```
+    /// demo如下：
+    /// ```txt
+    /// *3
+    /// $3
+    /// SET
+    /// $5
+    /// mykey
+    /// $7
+    /// myvalue
+    /// ```
+    pub fn parse(content: String) -> Option<Command> {
+        let commands: Vec<&str> = content.split("\r\n").collect();
+        todo!()
+    }
+}
+
 impl Command {}
 
 /// op 枚举值

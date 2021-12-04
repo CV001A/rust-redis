@@ -10,7 +10,9 @@ pub struct Database {
 
 impl Clone for Database {
     fn clone(&self) -> Self {
-        todo!()
+        Database{
+            mapping: self.mapping.clone()
+        }
     }
 }
 
