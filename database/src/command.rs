@@ -34,9 +34,20 @@ impl Command {
     /// $7
     /// myvalue
     /// ```
-    pub fn parse(content: String) -> Option<Command> {
+    pub fn parse(content: String) -> Result<Command, ()> {
         let commands: Vec<&str> = content.split("\r\n").collect();
-        todo!()
+        if commands.is_empty() {
+            logger::error("receive commands is empty");
+            return Err(());
+        }
+        let param_count_line = *commands.get(0).unwrap();
+        if !param_count_line.matches("^\\*\\d+$") {
+            logger::error("param count line is not match ^\\*\\d+$ ");
+            return Err(())
+        }
+
+        let param_count_str=param_count_line.split("*").next().unwrap();
+
     }
 }
 

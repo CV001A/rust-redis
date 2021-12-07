@@ -70,8 +70,8 @@ fn parse_command(stream: &mut TcpStream) -> database::Command {
     println!("receive content:{}", content);
     let result = database::Command::parse(content);
     match result {
-        Some(command) => return command,
-        None => panic!("content is error"),
+        Ok(command) => return command,
+        Err(()) => panic!("content is error"),
     }
 }
 
@@ -99,7 +99,8 @@ fn receive_content(stream: &mut TcpStream) -> String {
             break;
         }
 
-        data.append(&mut buffer[..len]);
+
+        data.append(&mut buffer);
     }
 
     return String::from_utf8(data).unwrap();
