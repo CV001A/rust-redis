@@ -43,10 +43,11 @@ impl Command {
         let param_count_line = *commands.get(0).unwrap();
         if !param_count_line.matches("^\\*\\d+$") {
             logger::error("param count line is not match ^\\*\\d+$ ");
-            return Err(())
+            return Err(());
         }
 
-        let param_count_str=param_count_line.split("*").next().unwrap();
+        let param_count_str = param_count_line.split("*").next().unwrap();
+        let param_count = param_count_str.parse::<i32>().unwrap();
 
     }
 }
